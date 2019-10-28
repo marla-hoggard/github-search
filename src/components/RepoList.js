@@ -2,6 +2,8 @@ import React from 'react';
 import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
 
+import RepoItem from './RepoItem';
+
 const SEARCH_REPOS_QUERY = gql`
   query SEARCH_REPOS_QUERY($query: String!, $type: SearchType!, $first: Int) {
   search(query: $query, type: $type, first: $first) {
@@ -26,7 +28,7 @@ const SEARCH_REPOS_QUERY = gql`
 const RepoList = () => {
   const { loading, data } = useQuery(SEARCH_REPOS_QUERY, {
     variables: {
-      query: 'test',
+      query: 'marla',
       type: 'REPOSITORY',
       first: 10,
     }
@@ -41,10 +43,7 @@ const RepoList = () => {
       <div>Your search found {repositoryCount} repos.</div>
       <ul>
         {edges.map(edge => (
-          <li>
-            <div>{edge.node.name}</div>
-            <div>{edge.node.owner.login}</div>
-          </li>
+          <RepoItem name={edge.node.name} owner={edge.node.owner.login} />
         ))}
       </ul>
     </>

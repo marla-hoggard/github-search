@@ -3,6 +3,7 @@ import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "react-apollo";
 
 import './App.css';
+import RepoList from './components/RepoList';
 
 const client = new ApolloClient({
   uri: "https://api.github.com/graphql",
@@ -18,9 +19,8 @@ const client = new ApolloClient({
 
 const App = () => (
   <ApolloProvider client={client}>
-    <div>
-      <h2>Let's Search Github</h2>
-    </div>
+    <h2>Search Github Repositories</h2>
+    <RepoList />
   </ApolloProvider>
 );
 

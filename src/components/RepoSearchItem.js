@@ -1,13 +1,18 @@
 import React from 'react';
+import { useApolloClient } from '@apollo/react-hooks';
 
-const RepoSearchItem = ({ name, owner, setSearchView, setName, setOwner }) => {
+const RepoSearchItem = ({ name, owner }) => {
+  const client = useApolloClient();
   return (
     <li
       className="result-item"
       onClick={() => {
-        setSearchView(false);
-        setName(name);
-        setOwner(owner);
+        client.writeData({
+          data: {
+            activeRepoName: name,
+            activeRepoOwner: owner,
+          }
+        });
       }}
     >
       <div>Repo: {name}</div>

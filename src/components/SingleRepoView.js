@@ -1,6 +1,6 @@
 import React from 'react';
 import gql from 'graphql-tag';
-import { useQuery } from '@apollo/react-hooks';
+import { useQuery, useApolloClient } from '@apollo/react-hooks';
 
 import Languages from './Languages';
 
@@ -25,20 +25,31 @@ const SINGLE_REPO_QUERY = gql`
 }
 `;
 
-const SingleRepoView = ({ name, owner, setSearchView }) => {
+const SingleRepoView = ({ name, owner }) => {
   const { loading, data, error } = useQuery(SINGLE_REPO_QUERY, {
     variables: {
       owner,
       name,
     }
   });
+  const client = useApolloClient();
 
-  if (error) console.log(error);
   if (loading) return <p>Loading...</p>;
+  if (error) return <p>{error.message}</p>
 
   return (
     <div>
-      <div className="back-link" onClick={() => setSearchView(true)}>← Back to Search</div>
+      <div
+        className="back-link"
+        onClick={() => {
+          client.writeData({
+            data: {
+              activeRepoName: null,
+              activeRepoOwner: null,
+            }
+          });
+        }}
+      >← Back to Search</div>
       <div><span className="bold">Repo: </span>{name}</div>
       <div><span className="bold">Owner: </span>{owner}</div>
       <div><span className="bold">About: </span>{data.repository.description}</div>

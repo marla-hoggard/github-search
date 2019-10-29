@@ -25,7 +25,7 @@ const SEARCH_REPOS_QUERY = gql`
 }
 `;
 
-const RepoSearchView = ({ setSearchView, setName, setOwner }) => {
+const RepoSearchView = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const { loading, data } = useQuery(SEARCH_REPOS_QUERY, {
     variables: {
@@ -58,9 +58,6 @@ const RepoSearchView = ({ setSearchView, setName, setOwner }) => {
                 key={edge.node.id}
                 name={edge.node.name}
                 owner={edge.node.owner.login}
-                setSearchView={setSearchView}
-                setName={setName}
-                setOwner={setOwner}
               />
             ))}
           </ul>

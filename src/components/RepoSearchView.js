@@ -23,15 +23,13 @@ const SEARCH_REPOS_QUERY = gql`
   ) {
     repositoryCount
     __typename
-    edges {
-      node {
-        ... on Repository {
+    nodes {
+      ... on Repository {
+        id
+        name
+        owner {
+          login
           id
-          name
-          owner {
-            login
-            id
-          }
         }
       }
     }
@@ -57,17 +55,15 @@ const RepoSearchView = () => {
   });
 
   const previousPage = () => {
-    console.log('previousPage');
     setVariables({
-      before: data.search.pageInfo.endCursor,
+      before: data.search.pageInfo.startCursor,
       last: 10,
     });
   }
 
   const nextPage = () => {
-    console.log('nextPage');
     setVariables({
-      after: data.search.pageInfo.startCursor,
+      after: data.search.pageInfo.endCursor,
       first: 10,
     });
   }
@@ -111,11 +107,11 @@ const RepoSearchView = () => {
                 </button>
               </div>
               <ul className="result-list">
-                {data.search.edges.map(edge => (
+                {data.search.nodes.map(node => (
                   <RepoSearchItem
-                    key={edge.node.id}
-                    name={edge.node.name}
-                    owner={edge.node.owner.login}
+                    key={node.id}
+                    name={node.name}
+                    owner={node.owner.login}
                   />
                 ))}
               </ul>

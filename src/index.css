@@ -18,9 +18,13 @@ code {
 }
 
 /* SEARCH BOX */
+.pagination-buttons {
+  display: flex;
+  align-items: center;
+}
+
 .pagination-button {
   font-size: 16px;
-  margin-right: 10px;
   border-radius: 5px;
   cursor: pointer;
 }
@@ -34,11 +38,15 @@ code {
   cursor: not-allowed;
 }
 
+.pagination-current {
+  margin: 0 10px;
+}
+
 .search-input {
   width: 200px;
   font-size: 20px;
-  padding: 20px;
   box-sizing: border-box;
+  margin-bottom: 15px;
 }
 
 /* SEARCH RESULTS LIST */

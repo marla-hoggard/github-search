@@ -68,7 +68,8 @@ const displayNumber = num => {
 const RepoSearchView = () => {
   const localState = useQuery(GET_SEARCH_TERM);
   const [searchTerm, setSearchTerm] = useState(localState.data.searchTerm || '');
-  const [variables, setVariables] = useState({ first: 10 })
+  const [variables, setVariables] = useState({ first: 10 });
+  const [page, setPage] = useState(1);
   const { loading, data } = useQuery(SEARCH_REPOS_QUERY, {
     variables: {
       query: searchTerm,
@@ -82,6 +83,7 @@ const RepoSearchView = () => {
       before: data.search.pageInfo.startCursor,
       last: 10,
     });
+    setPage(page - 1);
   }
 
   const nextPage = () => {
@@ -89,12 +91,21 @@ const RepoSearchView = () => {
       after: data.search.pageInfo.endCursor,
       first: 10,
     });
+    setPage(page + 1);
   }
 
   const handleChange = debounce(e => {
     setSearchTerm(e.target.value);
     setVariables({ first: 10 });
+    setPage(1);
   }, 350);
+
+  const paginationText = () => {
+    const count = data.search.repositoryCount;
+    const start = ((page - 1) * 10) + 1;
+    const end = start + 9 <= count ? start + 9 : count;
+    return `Viewing ${start}-${end} of ${displayNumber(count)} repos`
+  }
 
   return (
     <>
@@ -102,6 +113,7 @@ const RepoSearchView = () => {
         className="search-input"
         placeholder="Search repos..."
         type="search"
+        defaultValue={searchTerm}
         onChange={(e) => {
           e.persist();
           handleChange(e);
@@ -111,11 +123,7 @@ const RepoSearchView = () => {
 
       {loading ? <p>Searching...</p> :
         <>
-          {searchTerm.length ?
-            <p className="search-count">Your search found {displayNumber(data.search.repositoryCount)} repos.</p>
-            : null
-          }
-          {!!data.search.repositoryCount &&
+          {!!data.search.repositoryCount ?
             <>
               <div className="pagination-buttons">
                 <button
@@ -124,14 +132,15 @@ const RepoSearchView = () => {
                   disabled={!data.search.pageInfo.hasPreviousPage}
                 >
                   ≪ Prev 10
-                </button>
+                  </button>
+                <div className="pagination-current">{paginationText()}</div>
                 <button
                   className="pagination-button"
                   onClick={nextPage}
                   disabled={!data.search.pageInfo.hasNextPage}
                 >
                   Next 10 ≫
-                </button>
+                  </button>
               </div>
               <ul className="result-list">
                 {data.search.nodes.map(node => (
@@ -144,7 +153,8 @@ const RepoSearchView = () => {
                   />
                 ))}
               </ul>
-            </>
+            </> :
+            !!searchTerm.length && <p>Your search found 0 results.</p>
           }
         </>
       }

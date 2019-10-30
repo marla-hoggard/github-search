@@ -30,6 +30,7 @@ const SEARCH_REPOS_QUERY = gql`
         owner {
           login
           id
+          avatarUrl
         }
       }
     }
@@ -43,8 +44,30 @@ const SEARCH_REPOS_QUERY = gql`
 }
 `;
 
+export const GET_SEARCH_TERM = gql`
+  {
+    searchTerm @client
+  }
+`;
+
+// Add display commas to large integers
+const displayNumber = num => {
+  if (num < 1000) {
+    return String(num);
+  }
+  let withCommasReversed = [];
+  String(num).split('').reverse().forEach((digit, i) => {
+    if (i > 0 && i % 3 === 0) {
+      withCommasReversed.push(',');
+    }
+    withCommasReversed.push(digit);
+  });
+  return withCommasReversed.reverse().join('');
+}
+
 const RepoSearchView = () => {
-  const [searchTerm, setSearchTerm] = useState('');
+  const localState = useQuery(GET_SEARCH_TERM);
+  const [searchTerm, setSearchTerm] = useState(localState.data.searchTerm || '');
   const [variables, setVariables] = useState({ first: 10 })
   const { loading, data } = useQuery(SEARCH_REPOS_QUERY, {
     variables: {
@@ -71,9 +94,9 @@ const RepoSearchView = () => {
   return (
     <>
       <input
+        className="search-input"
         placeholder="Search repos..."
         type="search"
-        id="search"
         value={searchTerm}
         onChange={(e) => {
           setSearchTerm(e.target.value);
@@ -85,7 +108,7 @@ const RepoSearchView = () => {
       {loading ? <p>Loading...</p> :
         <>
           {searchTerm.length ?
-            <p className="search-count">Your search found {data.search.repositoryCount} repos.</p>
+            <p className="search-count">Your search found {displayNumber(data.search.repositoryCount)} repos.</p>
             : null
           }
           {!!data.search.repositoryCount &&
@@ -112,6 +135,8 @@ const RepoSearchView = () => {
                     key={node.id}
                     name={node.name}
                     owner={node.owner.login}
+                    avatar={node.owner.avatarUrl}
+                    searchTerm={searchTerm}
                   />
                 ))}
               </ul>

@@ -5,10 +5,11 @@ import gql from 'graphql-tag';
 import RepoSearchView from './RepoSearchView';
 import SingleRepoView from './SingleRepoView';
 
-const GET_ACTIVE_REPO = gql`
+export const GET_ACTIVE_REPO = gql`
   {
     activeRepoName @client
     activeRepoOwner @client
+    activeOwnerAvatar @client
   }
 `;
 
@@ -22,7 +23,7 @@ const Page = () => {
     <>
       <h2>Search Github Repositories</h2>
       {data.activeRepoName && data.activeRepoOwner
-        ? <SingleRepoView name={data.activeRepoName} owner={data.activeRepoOwner} />
+        ? <SingleRepoView />
         : <RepoSearchView />
       }
     </>

@@ -24,6 +24,8 @@ cache.writeData({
   data: {
     activeRepoName: null,
     activeRepoOwner: null,
+    activeOwnerAvatar: null,
+    searchTerm: '',
   },
 });
 

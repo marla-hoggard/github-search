@@ -5,6 +5,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  --darkGrey: #808080;
+  --lightGrey: #bbbbbb;
 }
 
 code {
@@ -20,8 +22,74 @@ code {
   text-decoration: underline;
 }
 
+/* SEARCH BOX */
+.pagination-button {
+  font-size: 16px;
+  margin-right: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.pagination-button:hover {
+  background: var(--lightGrey);
+}
+
+.pagination-button:disabled:hover {
+  background: white;
+  cursor: not-allowed;
+}
+
+.search-input {
+  width: 200px;
+  font-size: 20px;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* SEARCH RESULTS LIST */
+.result-list {
+  padding: 0;
+}
+
+.result-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border-bottom: 1px solid var(--darkGrey);
+  border-left: 1px solid var(--darkGrey);
+  border-right: 1px solid var(--darkGrey);
+}
+
+.result-item:first-of-type {
+  border-top: 1px solid var(--darkGrey);
+}
+
+.result-item:hover {
+  cursor: pointer;
+  background: var(--lightGrey);
+}
+
+.list__avatar {
+  width: 50px;
+  padding: 10px;
+}
+
+/* SINGLE REPO VIEW */
 .back-link {
   font-weight: bold;
   cursor: pointer;
   margin-bottom: 10px;
 }
+
+.repo__info {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.repo__avatar {
+  width: 125px;
+  margin-right: 10px;
+}
+
+

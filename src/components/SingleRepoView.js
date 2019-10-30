@@ -3,6 +3,7 @@ import gql from 'graphql-tag';
 import { useQuery, useApolloClient } from '@apollo/react-hooks';
 
 import Languages from './Languages';
+import { GET_ACTIVE_REPO } from './Page';
 
 const SINGLE_REPO_QUERY = gql`
   query SINGLE_REPO_QUERY($owner: String!, $name: String!) {
@@ -25,11 +26,13 @@ const SINGLE_REPO_QUERY = gql`
 }
 `;
 
-const SingleRepoView = ({ name, owner }) => {
+const SingleRepoView = () => {
+  const localState = useQuery(GET_ACTIVE_REPO);
+  const { activeOwnerAvatar, activeRepoName, activeRepoOwner } = localState.data;
   const { loading, data, error } = useQuery(SINGLE_REPO_QUERY, {
     variables: {
-      owner,
-      name,
+      name: activeRepoName,
+      owner: activeRepoOwner,
     }
   });
   const client = useApolloClient();
@@ -46,15 +49,23 @@ const SingleRepoView = ({ name, owner }) => {
             data: {
               activeRepoName: null,
               activeRepoOwner: null,
+              activeOwnerAvatar: null,
             }
           });
         }}
-      >← Back to Search</div>
-      <div><span className="bold">Repo: </span>{name}</div>
-      <div><span className="bold">Owner: </span>{owner}</div>
-      <div><span className="bold">About: </span>{data.repository.description}</div>
-      <div><span className="bold">Watchers: </span>{data.repository.watchers.totalCount}</div>
-      <div><a href={data.repository.url}>Visit Repo</a></div>
+      >
+        ← Back to Search
+      </div>
+      <div className="repo__info">
+        <img className="repo__avatar" src={activeOwnerAvatar} alt={activeRepoOwner} />
+        <div className="repo__info-text">
+          <div><span className="bold">Repo: </span>{activeRepoName}</div>
+          <div><span className="bold">Owner: </span>{activeRepoOwner}</div>
+          <div><span className="bold">About: </span>{data.repository.description}</div>
+          <div><span className="bold">Watchers: </span>{data.repository.watchers.totalCount}</div>
+          <div><a href={data.repository.url}>Visit Repo</a></div>
+        </div>
+      </div>
       <Languages languages={data.repository.languages.edges} />
     </div>
   );

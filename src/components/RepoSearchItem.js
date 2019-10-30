@@ -1,7 +1,7 @@
 import React from 'react';
 import { useApolloClient } from '@apollo/react-hooks';
 
-const RepoSearchItem = ({ name, owner }) => {
+const RepoSearchItem = ({ name, owner, avatar, searchTerm }) => {
   const client = useApolloClient();
   return (
     <li
@@ -11,12 +11,14 @@ const RepoSearchItem = ({ name, owner }) => {
           data: {
             activeRepoName: name,
             activeRepoOwner: owner,
+            activeOwnerAvatar: avatar,
+            searchTerm: searchTerm,
           }
         });
       }}
     >
-      <div>Repo: {name}</div>
-      <div>Owner: {owner}</div>
+      <img className="list__avatar" src={avatar} alt={owner} />
+      <div className="list__name">{owner} / {name}</div>
     </li>
   );
 };

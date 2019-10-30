@@ -9,7 +9,7 @@ const Languages = ({ languages }) => {
   return (
     <ul>
       <span className="bold underline">Languages:</span>
-      {languages.map(lang => (
+      {languages.sort((a, b) => b.size - a.size).map(lang => (
         <li key={lang.node.name}>
           {lang.node.name} ({percent(lang.size)})
         </li>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import gql from 'graphql-tag';
 import { useQuery } from '@apollo/react-hooks';
+import debounce from 'lodash.debounce';
 
 import RepoSearchItem from './RepoSearchItem';
 
@@ -52,17 +53,16 @@ export const GET_SEARCH_TERM = gql`
 
 // Add display commas to large integers
 const displayNumber = num => {
+  const stringNum = String(num);
   if (num < 1000) {
-    return String(num);
+    return stringNum;
   }
-  let withCommasReversed = [];
-  String(num).split('').reverse().forEach((digit, i) => {
-    if (i > 0 && i % 3 === 0) {
-      withCommasReversed.push(',');
-    }
-    withCommasReversed.push(digit);
-  });
-  return withCommasReversed.reverse().join('');
+  let triples = [];
+  for (let i = stringNum.length; i > 0; i -= 3) {
+    const start = i >= 3 ? i - 3 : 0;
+    triples.unshift(stringNum.slice(start, i));
+  }
+  return triples.join(',');
 }
 
 const RepoSearchView = () => {
@@ -91,21 +91,25 @@ const RepoSearchView = () => {
     });
   }
 
+  const handleChange = debounce(e => {
+    setSearchTerm(e.target.value);
+    setVariables({ first: 10 });
+  }, 350);
+
   return (
     <>
       <input
         className="search-input"
         placeholder="Search repos..."
         type="search"
-        value={searchTerm}
         onChange={(e) => {
-          setSearchTerm(e.target.value);
-          setVariables({ first: 10 });
+          e.persist();
+          handleChange(e);
         }}
         autoComplete="off"
       />
 
-      {loading ? <p>Loading...</p> :
+      {loading ? <p>Searching...</p> :
         <>
           {searchTerm.length ?
             <p className="search-count">Your search found {displayNumber(data.search.repositoryCount)} repos.</p>

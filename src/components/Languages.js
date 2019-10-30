@@ -30,7 +30,7 @@ const Languages = ({ languages }) => {
         {languages.sort((a, b) => b.size - a.size).map(lang => (
           <li className="language__list-item" key={lang.node.name}>
             <div
-              className="color-dot"
+              className="language__color-dot"
               style={{ background: lang.node.color }}
             >
             </div>

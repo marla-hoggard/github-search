@@ -51,7 +51,7 @@ export const GET_SEARCH_TERM = gql`
   }
 `;
 
-// Add display commas to large integers
+// Stringify and add commas to large integers (i.e. 12345 -> "12,345")
 const displayNumber = num => {
   const stringNum = String(num);
   if (num < 1000) {
@@ -114,47 +114,47 @@ const RepoSearchView = () => {
         placeholder="Search repos..."
         type="search"
         defaultValue={searchTerm}
+        autoComplete="off"
         onChange={(e) => {
           e.persist();
           handleChange(e);
         }}
-        autoComplete="off"
       />
-
-      {loading ? <p>Searching...</p> :
+      {!!searchTerm.length &&
         <>
-          {!!data.search.repositoryCount ?
-            <>
-              <div className="pagination-buttons">
-                <button
-                  className="pagination-button"
-                  onClick={previousPage}
-                  disabled={!data.search.pageInfo.hasPreviousPage}
-                >
-                  ≪ Prev 10
+          {loading ? <p>Searching...</p>
+            : data.search.repositoryCount ?
+              <>
+                <div className="pagination__buttons">
+                  <button
+                    className="pagination__button"
+                    onClick={previousPage}
+                    disabled={!data.search.pageInfo.hasPreviousPage}
+                  >
+                    ≪ Prev 10
                   </button>
-                <div className="pagination-current">{paginationText()}</div>
-                <button
-                  className="pagination-button"
-                  onClick={nextPage}
-                  disabled={!data.search.pageInfo.hasNextPage}
-                >
-                  Next 10 ≫
+                  <div className="pagination__current">{paginationText()}</div>
+                  <button
+                    className="pagination__button"
+                    onClick={nextPage}
+                    disabled={!data.search.pageInfo.hasNextPage}
+                  >
+                    Next 10 ≫
                   </button>
-              </div>
-              <ul className="result-list">
-                {data.search.nodes.map(node => (
-                  <RepoSearchItem
-                    key={node.id}
-                    name={node.name}
-                    owner={node.owner.login}
-                    avatar={node.owner.avatarUrl}
-                    searchTerm={searchTerm}
-                  />
-                ))}
-              </ul>
-            </> :
-            !!searchTerm.length && <p>Your search found 0 results.</p>
+                </div>
+                <ul className="result-list">
+                  {data.search.nodes.map(node => (
+                    <RepoSearchItem
+                      key={node.id}
+                      name={node.name}
+                      owner={node.owner.login}
+                      avatar={node.owner.avatarUrl}
+                      searchTerm={searchTerm}
+                    />
+                  ))}
+                </ul>
+              </>
+              : <p>Your search found 0 results.</p>
           }
         </>
       }

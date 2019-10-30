@@ -59,10 +59,10 @@ const SingleRepoView = () => {
       <div className="repo__info">
         <img className="repo__avatar" src={activeOwnerAvatar} alt={activeRepoOwner} />
         <div className="repo__info-text">
-          <div><span className="bold">Repo: </span>{activeRepoName}</div>
-          <div><span className="bold">Owner: </span>{activeRepoOwner}</div>
-          <div><span className="bold">About: </span>{data.repository.description}</div>
-          <div><span className="bold">Watchers: </span>{data.repository.watchers.totalCount}</div>
+          <div><span className="bold">Repo:</span> {activeRepoName}</div>
+          <div><span className="bold">Owner:</span> {activeRepoOwner}</div>
+          <div><span className="bold">About:</span> {data.repository.description}</div>
+          <div><span className="bold">Watchers:</span> {data.repository.watchers.totalCount}</div>
           <div>
             <a
               className="repo__link bold"

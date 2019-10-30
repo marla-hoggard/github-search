@@ -1,6 +1,9 @@
 import React from 'react';
 
 const Languages = ({ languages }) => {
+  if (!languages.length) {
+    return <div><span className="bold">Languages:</span> None</div>
+  }
   const totalBytes = languages.reduce((tally, cur) => tally + cur.size, 0);
   const percent = amt => {
     return Math.round(amt / totalBytes * 1000) / 10;

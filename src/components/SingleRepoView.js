@@ -63,7 +63,16 @@ const SingleRepoView = () => {
           <div><span className="bold">Owner: </span>{activeRepoOwner}</div>
           <div><span className="bold">About: </span>{data.repository.description}</div>
           <div><span className="bold">Watchers: </span>{data.repository.watchers.totalCount}</div>
-          <div><a href={data.repository.url}>Visit Repo</a></div>
+          <div>
+            <a
+              className="repo__link bold"
+              href={data.repository.url}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Visit Repo ➚
+            </a>
+          </div>
         </div>
       </div>
       <Languages languages={data.repository.languages.edges} />
